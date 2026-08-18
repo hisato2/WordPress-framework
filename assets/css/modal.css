@@ -1,0 +1,205 @@
+/*======================================
+  Modal
+======================================*/
+
+/*--------------------------------------
+ Overlay
+--------------------------------------*/
+
+.modal{
+
+    position:fixed;
+
+    inset:0;
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:var(--space-lg);
+
+    background:rgba(0,0,0,.5);
+
+    z-index:1000;
+
+}
+
+.modal.is-open{
+
+    display:flex;
+
+}
+
+/*--------------------------------------
+ Dialog
+--------------------------------------*/
+
+.modal-dialog{
+
+    width:100%;
+
+    max-width:600px;
+
+    background:var(--modal-bg);
+
+    border-radius:var(--modal-radius);
+
+    box-shadow:var(--modal-shadow);
+
+    overflow:hidden;
+
+}
+
+/*--------------------------------------
+ Header
+--------------------------------------*/
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:var(--space-md);
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.modal-title{
+
+    margin:0;
+
+    color:var(--primary);
+
+    font-size:var(--font-size-lg);
+
+}
+
+/*--------------------------------------
+ Close
+--------------------------------------*/
+
+.modal-close{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:40px;
+
+    height:40px;
+
+    padding:0;
+
+    border:none;
+
+    background:none;
+
+    color:var(--text-light);
+
+    cursor:pointer;
+
+    transition:var(--transition);
+
+}
+
+.modal-close:hover{
+
+    color:var(--primary);
+
+}
+
+/*--------------------------------------
+ Body
+--------------------------------------*/
+
+.modal-body{
+
+    padding:var(--space-lg);
+
+}
+
+/*--------------------------------------
+ Footer
+--------------------------------------*/
+
+.modal-footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:var(--space-sm);
+
+    padding:var(--space-md);
+
+    border-top:1px solid var(--border);
+
+}
+
+/*--------------------------------------
+ Size
+--------------------------------------*/
+
+.modal-sm .modal-dialog{
+
+    max-width:400px;
+
+}
+
+.modal-lg .modal-dialog{
+
+    max-width:900px;
+
+}
+
+.modal-full .modal-dialog{
+
+    max-width:none;
+
+    width:100%;
+
+    height:100%;
+
+    border-radius:0;
+
+}
+
+/*--------------------------------------
+ Responsive
+--------------------------------------*/
+
+@media (max-width:768px){
+
+    .modal{
+
+        padding:var(--space-sm);
+
+    }
+
+    .modal-dialog{
+
+        max-width:100%;
+
+    }
+
+    .modal-footer{
+
+        flex-direction:column;
+
+    }
+
+    .modal-footer .btn{
+
+        width:100%;
+
+    }
+
+}

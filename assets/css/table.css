@@ -1,0 +1,115 @@
+/*======================================
+  Table
+======================================*/
+
+.table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:var(--surface);
+
+}
+
+.table th,
+.table td{
+
+    padding:var(--space-sm);
+
+    border:1px solid var(--table-border);
+
+    text-align:left;
+
+    vertical-align:middle;
+
+}
+
+.table th{
+
+    background:var(--table-header-bg);
+
+    color:var(--primary);
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+}
+
+.table tbody tr{
+
+    transition:var(--transition);
+
+}
+
+.table tbody tr:hover{
+
+    background:var(--table-row-hover);
+
+}
+
+/*--------------------------------------
+ Striped
+--------------------------------------*/
+
+.table-striped tbody tr:nth-child(even){
+
+    background:var(--background);
+
+}
+
+/*--------------------------------------
+ Borderless
+--------------------------------------*/
+
+.table-borderless th,
+.table-borderless td{
+
+    border:none;
+
+}
+
+/*--------------------------------------
+ Compact
+--------------------------------------*/
+
+.table-sm th,
+.table-sm td{
+
+    padding:var(--space-xs);
+
+}
+
+/*--------------------------------------
+ Responsive
+--------------------------------------*/
+
+.table-responsive{
+
+    width:100%;
+
+    overflow-x:auto;
+
+}
+
+.table-responsive .table{
+
+    min-width:700px;
+
+}
+
+/*--------------------------------------
+ Responsive
+--------------------------------------*/
+
+@media (max-width:768px){
+
+    .table th,
+    .table td{
+
+        padding:var(--space-xs);
+
+    }
+
+}

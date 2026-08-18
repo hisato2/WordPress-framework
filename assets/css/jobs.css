@@ -1,0 +1,221 @@
+/*======================================
+  Jobs
+======================================*/
+
+.jobs{
+
+    padding:var(--section-padding);
+
+    background:var(--background);
+
+}
+
+/*--------------------------------------
+ Header
+--------------------------------------*/
+
+.jobs-header{
+
+    margin-bottom:var(--space-2xl);
+
+    text-align:center;
+
+}
+
+.jobs-title{
+
+    margin-bottom:var(--space-md);
+
+}
+
+.jobs-description{
+
+    max-width:700px;
+
+    margin:0 auto;
+
+    color:var(--text-light);
+
+}
+
+/*--------------------------------------
+ List
+--------------------------------------*/
+
+.jobs-list{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:var(--space-lg);
+
+}
+
+/*--------------------------------------
+ Card
+--------------------------------------*/
+
+.job-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    height:100%;
+
+}
+
+.job-body{
+
+    display:flex;
+
+    flex-direction:column;
+
+    flex:1;
+
+}
+
+.job-title{
+
+    margin-bottom:var(--space-sm);
+
+}
+
+.job-description{
+
+    margin-bottom:var(--space-md);
+
+    color:var(--text-light);
+
+}
+
+/*--------------------------------------
+ Status
+--------------------------------------*/
+
+.job-status{
+
+    display:inline-flex;
+
+    align-self:flex-start;
+
+    margin-bottom:var(--space-md);
+
+    padding:var(--space-xs) var(--space-sm);
+
+    border-radius:999px;
+
+    background:var(--success-color);
+
+    color:var(--surface);
+
+    font-size:var(--font-size-sm);
+
+    font-weight:700;
+
+}
+
+.job-status.closed{
+
+    background:var(--text-light);
+
+}
+
+/*--------------------------------------
+ Information
+--------------------------------------*/
+
+.job-info{
+
+    margin:0;
+
+    padding:0;
+
+    list-style:none;
+
+}
+
+.job-info li{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:var(--space-md);
+
+    padding:var(--space-sm) 0;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.job-info span{
+
+    color:var(--text-light);
+
+}
+
+.job-info strong{
+
+    font-weight:600;
+
+}
+
+/*--------------------------------------
+ Footer
+--------------------------------------*/
+
+.job-footer{
+
+    margin-top:auto;
+
+    padding-top:var(--space-lg);
+
+}
+
+.job-footer .btn{
+
+    width:100%;
+
+}
+
+/*--------------------------------------
+ Empty
+--------------------------------------*/
+
+.jobs-empty{
+
+    padding:var(--space-2xl);
+
+    text-align:center;
+
+    color:var(--text-light);
+
+}
+
+/*--------------------------------------
+ Responsive
+--------------------------------------*/
+
+@media (max-width:992px){
+
+    .jobs-list{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .jobs-list{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+

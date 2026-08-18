@@ -1,0 +1,121 @@
+/*======================================
+  Card
+======================================*/
+
+.card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:var(--card-bg);
+
+    border-radius:var(--card-radius);
+
+    box-shadow:var(--card-shadow);
+
+    padding:var(--card-padding);
+
+    margin-bottom: var(--space-sm); /* 追加 */
+
+}
+
+/*--------------------------------------
+ Hover
+--------------------------------------*/
+
+.card-hover{
+
+    transition:var(--transition);
+
+}
+
+.card-hover:hover{
+
+    transform:translateY(var(--card-hover-y));
+
+}
+
+/*--------------------------------------
+ Header
+--------------------------------------*/
+
+.card-header{
+
+    margin-bottom:var(--space-md);
+
+}
+
+.card-title{
+
+    margin:0;
+
+    color:var(--primary);
+
+    font-size:var(--font-size-lg);
+
+}
+
+/*--------------------------------------
+ Body
+--------------------------------------*/
+
+.card-body{
+
+    flex:1;
+
+}
+
+/*--------------------------------------
+ Footer
+--------------------------------------*/
+
+.card-footer{
+
+    margin-top:var(--space-md);
+
+}
+
+/*--------------------------------------
+ Border
+--------------------------------------*/
+
+.card-bordered{
+
+    border:1px solid var(--border);
+
+    box-shadow:none;
+
+}
+
+/*--------------------------------------
+ Shadow
+--------------------------------------*/
+
+.card-flat{
+
+    box-shadow:none;
+
+}
+
+.card-shadow{
+
+    box-shadow:var(--card-shadow);
+
+}
+
+/*--------------------------------------
+ Size
+--------------------------------------*/
+
+.card-sm{
+
+    padding:var(--space-md);
+
+}
+
+.card-lg{
+
+    padding:var(--space-xl);
+
+}

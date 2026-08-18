@@ -1,0 +1,151 @@
+/*======================================
+  Contact
+======================================*/
+
+.contact{
+
+    padding:var(--section-padding);
+
+    background:var(--background);
+
+}
+
+/*--------------------------------------
+ Header
+--------------------------------------*/
+
+.contact-header{
+
+    margin-bottom:var(--space-2xl);
+
+    text-align:center;
+
+}
+
+.contact-title{
+
+    margin-bottom:var(--space-md);
+
+}
+
+.contact-description{
+
+    max-width:700px;
+
+    margin:0 auto;
+
+    color:var(--text-light);
+
+}
+
+/*--------------------------------------
+ Layout
+--------------------------------------*/
+
+.contact-wrapper{
+
+    max-width:900px;
+
+    margin:0 auto;
+
+}
+
+.contact-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:var(--space-md);
+
+}
+
+/*--------------------------------------
+ Submit
+--------------------------------------*/
+
+.contact-submit{
+
+    margin-top:var(--space-lg);
+
+    text-align:center;
+
+}
+
+.contact-submit .btn{
+
+    min-width:220px;
+
+}
+
+/*--------------------------------------
+ Contact Info
+--------------------------------------*/
+
+.contact-info{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:var(--space-lg);
+
+    margin-top:var(--space-2xl);
+
+}
+
+.contact-info-item{
+
+    text-align:center;
+
+}
+
+.contact-info-item h3{
+
+    margin-bottom:var(--space-sm);
+
+}
+
+.contact-info-item p{
+
+    margin:0;
+
+    color:var(--text-light);
+
+}
+
+/*--------------------------------------
+ Links
+--------------------------------------*/
+
+.contact-links{
+
+    margin-top:var(--space-xl);
+
+    text-align:center;
+
+}
+
+.contact-links p{
+
+    margin-bottom:var(--space-sm);
+
+    color:var(--text-light);
+
+    font-size:var(--font-size-sm);
+
+}
+
+/*--------------------------------------
+ Responsive
+--------------------------------------*/
+
+@media (max-width:768px){
+
+    .contact-info{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

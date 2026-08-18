@@ -1,0 +1,227 @@
+/*======================================
+  Form
+======================================*/
+
+/*--------------------------------------
+ Group
+--------------------------------------*/
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:var(--space-xs);
+
+}
+
+.form-inline{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:var(--space-md);
+
+}
+
+/*--------------------------------------
+ Label
+--------------------------------------*/
+
+.form-label{
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+.required{
+
+    margin-left:var(--space-xs);
+
+    color:var(--error-color);
+
+}
+
+/*--------------------------------------
+ Control
+--------------------------------------*/
+
+.form-control{
+
+    width:100%;
+
+    min-height:var(--form-height);
+
+    padding:var(--form-padding);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--form-radius);
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    font:inherit;
+
+    transition:var(--transition);
+
+}
+
+.form-control:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+    box-shadow:var(--form-focus-shadow);
+
+}
+
+/*--------------------------------------
+ Textarea
+--------------------------------------*/
+
+textarea.form-control{
+
+    min-height:180px;
+
+    resize:vertical;
+
+}
+
+/*--------------------------------------
+ Select
+--------------------------------------*/
+
+select.form-control{
+
+    cursor:pointer;
+
+}
+
+/*--------------------------------------
+ Checkbox
+--------------------------------------*/
+
+.form-check{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:var(--space-xs);
+
+}
+
+.form-check input{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+.form-check label{
+
+    cursor:pointer;
+
+}
+
+/*--------------------------------------
+ Radio
+--------------------------------------*/
+
+.form-radio{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:var(--space-xs);
+
+}
+
+.form-radio input{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+.form-radio label{
+
+    cursor:pointer;
+
+}
+
+/*--------------------------------------
+ Help
+--------------------------------------*/
+
+.form-help{
+
+    margin-top:var(--space-xs);
+
+    font-size:var(--font-size-sm);
+
+    color:var(--text-light);
+
+}
+
+/*--------------------------------------
+ Error
+--------------------------------------*/
+
+.form-error{
+
+    margin-top:var(--space-xs);
+
+    font-size:var(--font-size-sm);
+
+    color:var(--error-color);
+
+}
+
+/*--------------------------------------
+ Actions
+--------------------------------------*/
+
+.form-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:var(--space-md);
+
+    margin-top:var(--space-lg);
+
+}
+
+/*--------------------------------------
+ Responsive
+--------------------------------------*/
+
+@media (max-width:768px){
+
+    .form-inline{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .form-actions{
+
+        flex-direction:column;
+
+    }
+
+}
