@@ -1113,3 +1113,77 @@ select.member-detail__control {
     }
 
 }
+
+
+/* ==========================================================================
+   Product Image
+   ========================================================================== */
+
+.product-image-current {
+    margin-bottom: 18px;
+}
+
+.product-image-current__label {
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 13px;
+}
+
+.product-image-current__preview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.product-image-current__image {
+    display: block;
+    width: auto;
+    max-width: 240px;
+    max-height: 320px;
+    object-fit: contain;
+}
+
+.product-image-current__filename {
+    margin-top: 8px;
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* ==========================================================================
+   Product Preview PDF
+   ========================================================================== */
+
+.member-detail-pdf-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 18px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid #d8d5cf;
+    border-radius: 7px;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.member-detail-pdf-link:hover {
+    background: #f7f6f3;
+    border-color: #bbb7af;
+}
+
+.member-detail-pdf-filename {
+    display: inline-block;
+    margin-left: 12px;
+    color: #999995;
+    font-size: 13px;
+}

@@ -121,5 +121,4 @@ if (!function_exists('asset')) {
 */
 
 \HKS\Providers\AssetServiceProvider::register();
-\HKS\Providers\RouteServiceProvider::register();
 \HKS\Providers\SetupServiceProvider::register();

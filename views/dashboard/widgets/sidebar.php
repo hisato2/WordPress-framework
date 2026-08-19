@@ -2,7 +2,75 @@
 
 declare(strict_types=1);
 
+defined('ABSPATH') || exit;
+
+/*
+|--------------------------------------------------------------------------
+| Current Dashboard View
+|--------------------------------------------------------------------------
+|
+| 現在表示しているDashboard画面を取得し、
+| サイドメニューの選択状態に使用する。
+|
+*/
+
+$currentView = isset($_GET['view'])
+    ? sanitize_key(wp_unslash($_GET['view']))
+    : 'home';
+
+/*
+|--------------------------------------------------------------------------
+| Menu Active判定
+|--------------------------------------------------------------------------
+*/
+
+$isDashboardActive = $currentView === 'home';
+
+$isUsersActive = in_array(
+    $currentView,
+    [
+        'users',
+        'user-detail',
+        'user-password',
+    ],
+    true
+);
+
+$isProductsActive = in_array(
+    $currentView,
+    [
+        'products',
+        'product-create',
+        'product-detail',
+        'product-edit',
+    ],
+    true
+);
+
+
+
+/*
+|--------------------------------------------------------------------------
+| シリーズ管理 Active判定
+|--------------------------------------------------------------------------
+*/
+
+$isSeriesActive = in_array(
+    $currentView,
+    [
+        'series',
+        'series-create',
+        'series-edit',
+    ],
+    true
+);
+
+
+
+
+
 ?>
+
 
 <aside class="dashboard-sidebar">
 
@@ -24,7 +92,7 @@ declare(strict_types=1);
                 <li class="dashboard-nav__item">
 
                     <a
-                        class="dashboard-nav__link is-active"
+                        class="dashboard-nav__link<?= $isDashboardActive ? ' is-active' : ''; ?>"
                         href="<?= esc_url(home_url('/dashboard/')); ?>"
                     >
                         <span class="dashboard-nav__icon" aria-hidden="true">
@@ -42,7 +110,7 @@ declare(strict_types=1);
                 <li class="dashboard-nav__item">
 
                     <a
-                        class="dashboard-nav__link"
+                        class="dashboard-nav__link<?= $isUsersActive ? ' is-active' : ''; ?>"
                         href="<?= esc_url(home_url('/dashboard/?view=users')); ?>"
                     >
                         <span class="dashboard-nav__icon" aria-hidden="true">
@@ -51,6 +119,53 @@ declare(strict_types=1);
 
                         <span>
                             会員管理
+                        </span>
+                    </a>
+
+                </li>
+
+
+
+                <li class="dashboard-nav__item">
+
+                    <a
+                        class="dashboard-nav__link<?= $isProductsActive ? ' is-active' : ''; ?>"
+                        href="<?= esc_url(
+                            home_url('/dashboard/?view=products')
+                        ); ?>"
+                    >
+                        <span
+                            class="dashboard-nav__icon"
+                            aria-hidden="true"
+                        >
+                            ▦
+                        </span>
+
+                        <span>
+                            商品管理
+                        </span>
+                    </a>
+
+                </li>
+
+
+                <li class="dashboard-nav__item">
+
+                    <a
+                        class="dashboard-nav__link<?= $isSeriesActive ? ' is-active' : ''; ?>"
+                        href="<?= esc_url(
+                            home_url('/dashboard/?view=series')
+                        ); ?>"
+                    >
+                        <span
+                            class="dashboard-nav__icon"
+                            aria-hidden="true"
+                        >
+                            ▤
+                        </span>
+
+                        <span>
+                            シリーズ管理
                         </span>
                     </a>
 

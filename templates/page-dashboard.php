@@ -33,12 +33,6 @@ if (!$auth->canAccessAdmin()) {
 |--------------------------------------------------------------------------
 | POST処理
 |--------------------------------------------------------------------------
-*/
-
-/*
-|--------------------------------------------------------------------------
-| POST処理
-|--------------------------------------------------------------------------
 |
 | Dashboardページ自身でPOSTを受け取り、
 | actionの内容に応じて各API処理へ振り分ける。
@@ -49,6 +43,7 @@ if (!$auth->canAccessAdmin()) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
 
 
     /*
@@ -107,6 +102,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         : '';
 
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | 商品新規登録
+    |--------------------------------------------------------------------------
+    */
+
+    if ($dashboardAction === 'hks_create_product') {
+        $createProductFile = get_template_directory()
+            . '/api/products/create.php';
+
+        if (!is_file($createProductFile)) {
+            wp_die(
+                '商品登録処理が見つかりません。',
+                'システムエラー',
+                ['response' => 500]
+            );
+        }
+
+        require $createProductFile;
+
+        exit;
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | シリーズ新規登録
+    |--------------------------------------------------------------------------
+    */
+
+    if ($dashboardAction === 'hks_create_series') {
+
+        $createSeriesFile = get_template_directory()
+            . '/api/series/create.php';
+
+        if (!is_file($createSeriesFile)) {
+            wp_die(
+                'シリーズ登録処理が見つかりません。',
+                'システムエラー',
+                ['response' => 500]
+            );
+        }
+
+        require $createSeriesFile;
+
+        exit;
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 商品更新
+    |--------------------------------------------------------------------------
+    */
+
+    if ($dashboardAction === 'update_product') {
+        $updateProductFile = get_template_directory()
+            . '/api/products/update.php';
+
+        if (!is_file($updateProductFile)) {
+            wp_die(
+                '商品更新処理が見つかりません。',
+                'システムエラー',
+                ['response' => 500]
+            );
+        }
+
+        require $updateProductFile;
+
+        exit;
+    }
+
+
+
+
+
     if ($dashboardAction === 'change_member_password') {
         $changePasswordFile = get_template_directory()
             . '/api/members/change-password.php';
@@ -128,17 +203,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| ダッシュボード権限確認
-|--------------------------------------------------------------------------
-*/
-
-if (!$auth->canAccessAdmin()) {
-
-    wp_safe_redirect(home_url('/mypage/'));
-    exit;
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +241,245 @@ $view = isset($_GET['view'])
 
 switch ($view) {
 
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 商品管理
+    |--------------------------------------------------------------------------
+    */
+
+    case 'products':
+
+        $productRepository = new \HKS\Repositories\ProductRepository();
+
+        $products = $productRepository->all();
+
+        $contentView = get_template_directory()
+            . '/views/dashboard/products/index.php';
+
+        break;
+
+   /*
+    |--------------------------------------------------------------------------
+    | 商品新規登録
+    |--------------------------------------------------------------------------
+    */
+
+    case 'product-create':
+
+        /*
+        |--------------------------------------------------------------------------
+        | シリーズ一覧取得
+        |--------------------------------------------------------------------------
+        |
+        | 商品を既存シリーズへ所属させるため、
+        | 商品登録画面へシリーズ一覧を渡す。
+        |
+        */
+
+        $productSeriesRepository =
+            new \HKS\Repositories\ProductSeriesRepository();
+
+        $seriesList =
+            $productSeriesRepository->all();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | View
+        |--------------------------------------------------------------------------
+        */
+
+        $contentView = get_template_directory()
+            . '/views/dashboard/products/create.php';
+
+        break;
+        
+
+    /*
+    |--------------------------------------------------------------------------
+    | 商品編集
+    |--------------------------------------------------------------------------
+    */
+
+    case 'product-edit':
+
+        $productId = isset($_GET['id'])
+            ? absint($_GET['id'])
+            : 0;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 商品情報取得
+        |--------------------------------------------------------------------------
+        */
+
+        $productRepository =
+            new \HKS\Repositories\ProductRepository();
+
+        $product =
+            $productRepository->findById(
+                $productId
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 単品販売条件取得
+        |--------------------------------------------------------------------------
+        |
+        | hks_sales_options から、
+        | この商品の single 販売条件を取得する。
+        |
+        | 販売条件がまだ登録されていない既存商品については
+        | null のまま編集画面へ渡す。
+        |
+        */
+
+        $salesOptionRepository =
+            new \HKS\Repositories\SalesOptionRepository();
+
+        $salesOption =
+            $salesOptionRepository->findSingleByProductId(
+                $productId
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | View
+        |--------------------------------------------------------------------------
+        */
+
+        $contentView = get_template_directory()
+            . '/views/dashboard/products/edit.php';
+
+        break;
+
+
+
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | シリーズ管理
+        |--------------------------------------------------------------------------
+        */
+
+        case 'series':
+
+            $productSeriesRepository =
+                new \HKS\Repositories\ProductSeriesRepository();
+
+            $seriesList =
+                $productSeriesRepository->all();
+
+            $contentView = get_template_directory()
+                . '/views/dashboard/series/index.php';
+
+            break;
+                
+
+        /*
+        |--------------------------------------------------------------------------
+        | シリーズ新規登録
+        |--------------------------------------------------------------------------
+        */
+
+        case 'series-create':
+
+            $contentView = get_template_directory()
+                . '/views/dashboard/series/create.php';
+
+            break;
+
+
+/*
+|--------------------------------------------------------------------------
+| シリーズ編集
+|--------------------------------------------------------------------------
+*/
+
+case 'series-edit':
+
+    $seriesId = isset($_GET['id'])
+        ? absint($_GET['id'])
+        : 0;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Series ID Check
+    |--------------------------------------------------------------------------
+    */
+
+    if ($seriesId <= 0) {
+        wp_die(
+            'シリーズIDが正しくありません。',
+            'シリーズ取得エラー',
+            ['response' => 400]
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | シリーズ情報取得
+    |--------------------------------------------------------------------------
+    */
+
+    $productSeriesRepository =
+        new \HKS\Repositories\ProductSeriesRepository();
+
+    $series =
+        $productSeriesRepository->findById(
+            $seriesId
+        );
+
+
+    if ($series === null) {
+        wp_die(
+            '指定されたシリーズが見つかりません。',
+            'シリーズ取得エラー',
+            ['response' => 404]
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 定期購読販売条件取得
+    |--------------------------------------------------------------------------
+    */
+
+    $salesOptionRepository =
+        new \HKS\Repositories\SalesOptionRepository();
+
+    $subscription =
+        $salesOptionRepository->findSubscriptionBySeriesId(
+            $seriesId
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | View
+    |--------------------------------------------------------------------------
+    */
+
+    $contentView = get_template_directory()
+        . '/views/dashboard/series/edit.php';
+
+    break;
+    
+
+
+
+
     /*
     |--------------------------------------------------------------------------
     | 会員管理
@@ -193,7 +496,6 @@ switch ($view) {
             . '/views/dashboard/users/index.php';
 
         break;
-
 
     /*
     |--------------------------------------------------------------------------

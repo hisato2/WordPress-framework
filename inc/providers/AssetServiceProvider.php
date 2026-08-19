@@ -251,24 +251,6 @@ final class AssetServiceProvider
     private static function enqueuePageScripts(): void
     {
         // Authentication
-        if (is_page('login')) {
-            self::enqueueScript(
-                'hks-login',
-                'js/auth/login.js',
-                ['hks-common'],
-                true
-            );
-        }
-
-
-        if (is_page('signup')) {
-            self::enqueueScript(
-                'hks-signup',
-                'js/auth/signup.js',
-                ['hks-common'],
-                true
-            );
-        }
 
 
         if (is_page('forgot-password')) {
@@ -342,6 +324,37 @@ final class AssetServiceProvider
                 true
             );
         }
+
+
+        // Dashboard - Product Form
+        if (is_page('dashboard')) {
+
+            $view = isset($_GET['view'])
+                ? sanitize_key(
+                    wp_unslash($_GET['view'])
+                )
+                : '';
+
+            if (
+                in_array(
+                    $view,
+                    [
+                        'product-create',
+                        'product-edit',
+                    ],
+                    true
+                )
+            ) {
+                self::enqueueScript(
+                    'hks-product-form',
+                    'js/products/product-form.js',
+                    ['hks-common'],
+                    true
+                );
+            }
+                
+        }
+
     }
 
 

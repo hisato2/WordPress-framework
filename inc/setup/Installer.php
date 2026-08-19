@@ -24,7 +24,7 @@ final class Installer
      *
      * Migrationを追加・変更した場合に更新する。
      */
-    private const DB_VERSION = '1.0.0';
+    private const DB_VERSION = '1.0.2';
 
     /**
      * 初回インストール

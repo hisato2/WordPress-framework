@@ -13,10 +13,8 @@ declare(strict_types=1);
  * @package HakuhoushaPortfolio
  */
 
+
 require_once __DIR__ . '/inc/bootstrap.php';
-
-
-
 
 /**
  * デバッグ表示して処理を停止

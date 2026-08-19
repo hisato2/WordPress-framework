@@ -15,7 +15,7 @@ if (have_posts()) {
 
 } else {
 
-    require get_template_directory() . '/views/pages/404.php';
+    require get_template_directory() . '/views/errors/404.php';
 }
 
 get_footer();

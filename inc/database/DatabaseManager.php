@@ -8,6 +8,8 @@ namespace HKS\Database;
 use HKS\Database\Migrations\CreateUsersTable;
 use HKS\Database\Migrations\CreateProductSeriesTable;
 use HKS\Database\Migrations\CreateProductsTable;
+use HKS\Database\Migrations\AddPreviewPdfToProducts;            
+use HKS\Database\Migrations\AddSoftwareProductType;
 use HKS\Database\Migrations\CreateSalesOptionsTable;
 use HKS\Database\Migrations\CreateSalesChannelsTable;
 use HKS\Database\Migrations\CreateShippingMethodsTable;
@@ -52,6 +54,8 @@ final class DatabaseManager
             CreateUsersTable::class,
             CreateProductSeriesTable::class,
             CreateProductsTable::class,
+            AddPreviewPdfToProducts::class,
+            AddSoftwareProductType::class,
             CreateSalesOptionsTable::class,
             CreateSalesChannelsTable::class,
             CreateShippingMethodsTable::class,

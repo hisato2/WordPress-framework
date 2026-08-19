@@ -2,8 +2,27 @@
 
 declare(strict_types=1);
 
-get_header();
+defined('ABSPATH') || exit;
 
-require get_template_directory() . '/views/pages/404.php';
+?>
 
-get_footer();
+<main class="site-main">
+
+    <section class="error-404">
+
+        <h1>
+            ページが見つかりません
+        </h1>
+
+        <p>
+            お探しのページは存在しないか、
+            移動または削除された可能性があります。
+        </p>
+
+        <a href="<?php echo esc_url(home_url('/')); ?>">
+            トップページへ戻る
+        </a>
+
+    </section>
+
+</main>
