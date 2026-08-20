@@ -46,8 +46,9 @@ $description = (string) ($product['description'] ?? '');
 
 $productTypes = [
     'book'     => '単行本',
-    'volume'   => 'シリーズ巻',
-    'issue'    => '雑誌・刊行物',
+    'volume'   => 'シリーズ本',
+    'quarterly' => '季刊誌',
+    'monthly'   => '月刊誌',
     'software' => 'ソフトウェア',
 ];
 
@@ -195,6 +196,77 @@ $listUrl = home_url('/dashboard/?view=products');
                             </select>
 
                         </div>
+
+
+
+                        <!-- 所属シリーズ -->
+
+                        <div class="member-detail__item">
+
+                            <label
+                                for="series_id"
+                                class="member-detail__label"
+                            >
+                                所属シリーズ
+                            </label>
+
+                            <select
+                                id="series_id"
+                                name="series_id"
+                                class="member-detail__control"
+                            >
+
+                                <option value="">
+                                    シリーズなし
+                                </option>
+
+                                <?php foreach ($seriesList as $series): ?>
+
+                                    <?php
+
+                                    $seriesId = (int) (
+                                        $series['id'] ?? 0
+                                    );
+
+                                    $seriesName = (string) (
+                                        $series['name'] ?? ''
+                                    );
+
+                                    $seriesType = (string) (
+                                        $series['series_type'] ?? ''
+                                    );
+
+                                    ?>
+
+                                    <option
+                                        value="<?php echo esc_attr(
+                                            (string) $seriesId
+                                        ); ?>"
+                                        data-series-type="<?php echo esc_attr(
+                                            $seriesType
+                                        ); ?>"
+                                        <?php selected(
+                                            (int) ($product['series_id'] ?? 0),
+                                            $seriesId
+                                        ); ?>
+                                    >
+                                        <?php echo esc_html(
+                                            $seriesName
+                                        ); ?>
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
+
+                            <p class="member-detail__help">
+                                商品種別に対応するシリーズを選択してください。
+                            </p>
+
+                        </div>
+                        
+
+
 
 
                         <!-- 商品名 -->
@@ -637,6 +709,65 @@ $listUrl = home_url('/dashboard/?view=products');
                                     (string) ($product['publication_date'] ?? '')
                                 ); ?>"
                             >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+                ソフトウェア情報
+                ================================================= -->
+
+            <section
+                id="software_section"
+                class="member-detail__section"
+                style="display: none;"
+            >
+
+                <header class="member-detail__section-header">
+
+                    <h2 class="member-detail__section-title">
+                        ソフトウェア情報
+                    </h2>
+
+                </header>
+
+
+                <div class="member-detail__section-body">
+
+                    <div class="member-detail__grid">
+
+
+                        <!-- ソフトウェアバージョン -->
+
+                        <div class="member-detail__item">
+
+                            <label
+                                for="software_version"
+                                class="member-detail__label"
+                            >
+                                ソフトウェアバージョン
+                            </label>
+
+                            <input
+                                type="text"
+                                id="software_version"
+                                name="software_version"
+                                class="member-detail__control"
+                                maxlength="50"
+                                value="<?php echo esc_attr(
+                                    (string) ($product['software_version'] ?? '')
+                                ); ?>"
+                                placeholder="例: 1.0.1"
+                            >
+
+                            <p class="member-detail__help">
+                                バージョン番号を入力してください。
+                            </p>
 
                         </div>
 

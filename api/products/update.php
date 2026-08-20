@@ -120,6 +120,13 @@ $data = [
         )
         : '',
 
+    'software_version' => isset($_POST['software_version'])
+        ? sanitize_text_field(
+            wp_unslash($_POST['software_version'])
+        )
+        : '',
+
+
     'publication_year' => isset($_POST['publication_year'])
         ? sanitize_text_field(
             wp_unslash($_POST['publication_year'])

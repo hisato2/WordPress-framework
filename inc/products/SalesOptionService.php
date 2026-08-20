@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace HKS\Products;
 
 use HKS\Repositories\SalesOptionRepository;
+use HKS\Repositories\ProductSeriesRepository;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -24,14 +25,16 @@ final class SalesOptionService
      * Sales Option Repository
      */
     private SalesOptionRepository $salesOptionRepository;
-
+    private ProductSeriesRepository $productSeriesRepository;
 
     public function __construct()
     {
         $this->salesOptionRepository =
             new SalesOptionRepository();
-    }
 
+        $this->productSeriesRepository =
+            new ProductSeriesRepository();
+    }
 
     /**
      * 商品の単品販売条件を登録する。
@@ -70,7 +73,7 @@ final class SalesOptionService
 
         $existing =
             $this->salesOptionRepository
-                ->findSingleByProductId($productId);
+            ->findSingleByProductId($productId);
 
         if ($existing !== null) {
             throw new \InvalidArgumentException(
@@ -240,7 +243,7 @@ final class SalesOptionService
 
         $existing =
             $this->salesOptionRepository
-                ->findSingleByProductId($productId);
+            ->findSingleByProductId($productId);
 
         if ($existing === null) {
             throw new \InvalidArgumentException(
@@ -406,6 +409,50 @@ final class SalesOptionService
             );
         }
 
+        /*
+|--------------------------------------------------------------------------
+| Series
+|--------------------------------------------------------------------------
+*/
+
+        $series =
+            $this->productSeriesRepository
+            ->findById(
+                $seriesId
+            );
+
+        if ($series === null) {
+            throw new \InvalidArgumentException(
+                '指定されたシリーズが見つかりません。'
+            );
+        }
+
+
+        /*
+|--------------------------------------------------------------------------
+| Subscription Eligible Series Type
+|--------------------------------------------------------------------------
+*/
+
+        $seriesType =
+            (string) ($series['series_type'] ?? '');
+
+        if (
+            !in_array(
+                $seriesType,
+                [
+                    'quarterly',
+                    'monthly',
+                ],
+                true
+            )
+        ) {
+            throw new \InvalidArgumentException(
+                '定期購読を設定できるのは季刊誌・月刊誌のみです。'
+            );
+        }
+
+
 
         /*
         |----------------------------------------------------------------------
@@ -415,9 +462,9 @@ final class SalesOptionService
 
         $existing =
             $this->salesOptionRepository
-                ->findSubscriptionBySeriesId(
-                    $seriesId
-                );
+            ->findSubscriptionBySeriesId(
+                $seriesId
+            );
 
         if ($existing !== null) {
             throw new \InvalidArgumentException(
@@ -610,6 +657,49 @@ final class SalesOptionService
             );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Series
+        |--------------------------------------------------------------------------
+        */
+
+        $series =
+            $this->productSeriesRepository
+                ->findById(
+                    $seriesId
+                );
+
+        if ($series === null) {
+            throw new \InvalidArgumentException(
+                '指定されたシリーズが見つかりません。'
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Subscription Eligible Series Type
+        |--------------------------------------------------------------------------
+        */
+
+        $seriesType =
+            (string) ($series['series_type'] ?? '');
+
+        if (
+            !in_array(
+                $seriesType,
+                [
+                    'quarterly',
+                    'monthly',
+                ],
+                true
+            )
+        ) {
+            throw new \InvalidArgumentException(
+                '定期購読を設定できるのは季刊誌・月刊誌のみです。'
+            );
+        }
+
 
         /*
         |----------------------------------------------------------------------
@@ -619,9 +709,9 @@ final class SalesOptionService
 
         $existing =
             $this->salesOptionRepository
-                ->findSubscriptionBySeriesId(
-                    $seriesId
-                );
+            ->findSubscriptionBySeriesId(
+                $seriesId
+            );
 
         if ($existing === null) {
             throw new \InvalidArgumentException(
@@ -787,7 +877,23 @@ final class SalesOptionService
         }
     }
 
-    
+
+
+
+/**
+ * 定期購読販売条件の一覧を取得する。
+ *
+ * @return array<int, array<string, mixed>>
+ */
+    public function getSubscriptions(): array
+    {
+        return $this->salesOptionRepository
+            ->findAllSubscriptions();
+    }
+
+
+
+
     /**
      * 1以上の整数へ正規化する。
      *

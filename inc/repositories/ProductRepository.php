@@ -142,6 +142,7 @@ final class ProductRepository
             'isbn',
             'volume_number',
             'issue_number',
+            'software_version',
             'publication_year',
             'publication_month',
             'publication_date',
@@ -197,6 +198,7 @@ final class ProductRepository
             'isbn',
             'volume_number',
             'issue_number',
+            'software_version',
             'publication_year',
             'publication_month',
             'publication_date',
@@ -272,7 +274,7 @@ final class ProductRepository
     /**
      * 商品種別から取得
      *
-     * book / volume / issue / software
+     * book / volume / quarterly / monthly / software
      */
     public function findByType(
         string $productType

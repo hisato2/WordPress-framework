@@ -10,6 +10,8 @@ use HKS\Database\Migrations\CreateProductSeriesTable;
 use HKS\Database\Migrations\CreateProductsTable;
 use HKS\Database\Migrations\AddPreviewPdfToProducts;            
 use HKS\Database\Migrations\AddSoftwareProductType;
+use HKS\Database\Migrations\AddPublicationProductTypes;
+use HKS\Database\Migrations\AddSoftwareVersionToProducts;
 use HKS\Database\Migrations\CreateSalesOptionsTable;
 use HKS\Database\Migrations\CreateSalesChannelsTable;
 use HKS\Database\Migrations\CreateShippingMethodsTable;
@@ -56,6 +58,8 @@ final class DatabaseManager
             CreateProductsTable::class,
             AddPreviewPdfToProducts::class,
             AddSoftwareProductType::class,
+            AddPublicationProductTypes::class,
+            AddSoftwareVersionToProducts::class,
             CreateSalesOptionsTable::class,
             CreateSalesChannelsTable::class,
             CreateShippingMethodsTable::class,

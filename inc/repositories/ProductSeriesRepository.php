@@ -249,6 +249,55 @@ final class ProductSeriesRepository
         ) ?: [];
     }
 
+
+
+/**
+ * 定期購読登録可能な刊行物を取得
+ *
+ * 対象:
+ * - 季刊誌
+ * - 月刊誌
+ * - 有効な刊行物
+ * - 定期購読販売条件がまだ登録されていない刊行物
+ *
+ * @return array<int, array<string, mixed>>
+ */
+    public function findAvailableForSubscription(): array
+    {
+        $sql = "
+            SELECT
+                ps.*
+            FROM {$this->table} AS ps
+            WHERE ps.series_type IN (
+                'quarterly',
+                'monthly'
+            )
+            AND NOT EXISTS (
+                SELECT 1
+                FROM hks_sales_options AS so
+                WHERE so.series_id = ps.id
+                AND so.sales_type = 'subscription'
+            )
+            ORDER BY
+                CASE ps.series_type
+                    WHEN 'quarterly' THEN 1
+                    WHEN 'monthly' THEN 2
+                    ELSE 3
+                END,
+                ps.name ASC
+        ";
+
+        return $this->wpdb->get_results(
+            $sql,
+            ARRAY_A
+        ) ?: [];
+    }
+
+
+
+
+
+
     /**
      * シリーズ種別から取得
      *

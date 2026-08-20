@@ -30,7 +30,8 @@ final class ProductService
     private const PRODUCT_TYPES = [
         'book',
         'volume',
-        'issue',
+        'quarterly',
+        'monthly',
         'software',
     ];
 
@@ -86,7 +87,8 @@ final class ProductService
         */
 
         $this->validateSeries(
-            $data['series_id']
+            $data['series_id'],
+            $data['product_type']
         );
 
         /*
@@ -159,7 +161,8 @@ final class ProductService
         */
 
         $this->validateSeries(
-            $merged['series_id']
+            $merged['series_id'],
+            $merged['product_type']
         );
 
         return $this->products->update(
@@ -227,6 +230,7 @@ final class ProductService
                 'isbn',
                 'volume_number',
                 'issue_number',
+                'software_version',                
                 'image_path',
                 'preview_pdf_path',                
                 'tax_type',
@@ -252,6 +256,7 @@ final class ProductService
                 'isbn',
                 'volume_number',
                 'issue_number',
+                'software_version',                
                 'publication_date',
                 'image_path',
                 'preview_pdf_path',                
@@ -417,58 +422,139 @@ final class ProductService
             );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Product Type Rules
-        |--------------------------------------------------------------------------
-        |
-        | シリーズ巻（volume）のみシリーズ指定を必須とする。
-        |
-        | book:
-        |   通常の単行本。シリーズなしで登録可能。
-        |
-        | volume:
-        |   シリーズに属する巻。series_id 必須。
-        |
-        | issue:
-        |   雑誌・刊行物。シリーズなしで登録可能。
-        |   通し号番号は issue_number で管理する。
-        |
-        | software:
-        |   ソフトウェア。シリーズなしで登録可能。
-        |
-        */
+/*
+|--------------------------------------------------------------------------
+| Product Type Rules
+|--------------------------------------------------------------------------
+|
+| 商品種別ごとのシリーズ指定ルール。
+|
+| book:
+|   単行本。シリーズ指定なし。
+|
+| volume:
+|   シリーズ本。書籍シリーズの指定必須。
+|
+| quarterly:
+|   季刊誌。季刊誌マスターの指定必須。
+|
+| monthly:
+|   月刊誌。月刊誌マスターの指定必須。
+|
+| software:
+|   ソフトウェア。シリーズ指定なし。
+|
+*/
 
-        if (
-            $data['product_type'] === 'volume' &&
-            $data['series_id'] === null
-        ) {
-            throw new \InvalidArgumentException(
-                'シリーズ巻にはシリーズの指定が必要です。'
-            );
-        }
+            if (
+                in_array(
+                    $data['product_type'],
+                    [
+                        'volume',
+                        'quarterly',
+                        'monthly',
+                    ],
+                    true
+                )
+                && $data['series_id'] === null
+            ) {
+                throw new \InvalidArgumentException(
+                    'この商品種別には所属シリーズの指定が必要です。'
+                );
+            }
+
+            if (
+                in_array(
+                    $data['product_type'],
+                    [
+                        'book',
+                        'software',
+                    ],
+                    true
+                )
+                && $data['series_id'] !== null
+            ) {
+                throw new \InvalidArgumentException(
+                    'この商品種別には所属シリーズを指定できません。'
+                );
+            }
 
         } // ← validate() を閉じる
-
-        /**
-         * シリーズ存在確認
-         */
+/**
+ * 商品種別とシリーズ種別の整合性確認
+ */
         private function validateSeries(
-            ?int $seriesId
+            ?int $seriesId,
+            string $productType
         ): void {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Seriesなし
+            |--------------------------------------------------------------------------
+            */
 
             if ($seriesId === null) {
                 return;
             }
 
-            if (
-                $this->series->findById(
-                    $seriesId
-                ) === null
-            ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Series取得
+            |--------------------------------------------------------------------------
+            */
+
+            $series = $this->series->findById(
+                $seriesId
+            );
+
+            if ($series === null) {
                 throw new \InvalidArgumentException(
                     '指定された商品シリーズが存在しません。'
                 );
             }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Expected Series Type
+            |--------------------------------------------------------------------------
+            */
+
+            $expectedSeriesTypes = [
+                'volume'    => 'book_series',
+                'quarterly' => 'quarterly',
+                'monthly'   => 'monthly',
+            ];
+
+            if (!isset($expectedSeriesTypes[$productType])) {
+                throw new \InvalidArgumentException(
+                    'この商品種別にはシリーズを指定できません。'
+                );
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Series Type Check
+            |--------------------------------------------------------------------------
+            */
+
+            $seriesType = (string) (
+                $series['series_type'] ?? ''
+            );
+
+            if (
+                $seriesType !==
+                $expectedSeriesTypes[$productType]
+            ) {
+                throw new \InvalidArgumentException(
+                    '商品種別と所属シリーズの種別が一致していません。'
+                );
+            }
         }
+
+
+
     }

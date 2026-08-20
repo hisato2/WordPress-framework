@@ -12,16 +12,13 @@ defined('ABSPATH') || exit;
 */
 
 $seriesTypeLabels = [
-    'book_series' => '書籍シリーズ',
-    'quarterly'   => '季刊誌',
-    'monthly'     => '月刊誌',
+    'quarterly' => '季刊誌',
+    'monthly'   => '月刊誌',
 ];
 
 $statusLabels = [
-    'draft'        => '下書き',
-    'active'       => '公開中',
-    'inactive'     => '非公開',
-    'discontinued' => '刊行終了',
+    'active'   => '販売中',
+    'inactive' => '停止中',
 ];
 
 
@@ -33,14 +30,14 @@ $statusLabels = [
 
 $createUrl = add_query_arg(
     [
-        'view' => 'series-create',
+        'view' => 'subscription-create',
     ],
     home_url('/dashboard/')
 );
 
-$productListUrl = add_query_arg(
+$seriesListUrl = add_query_arg(
     [
-        'view' => 'products',
+        'view' => 'series',
     ],
     home_url('/dashboard/')
 );
@@ -49,38 +46,84 @@ $productListUrl = add_query_arg(
 
 <div class="product-management">
 
+
+
+    <?php
+
+    /*
+    |--------------------------------------------------------------------------
+    | Success Messages
+    |--------------------------------------------------------------------------
+    */
+
+    $subscriptionCreated =
+        isset($_GET['created'])
+        && sanitize_key(
+            wp_unslash($_GET['created'])
+        ) === '1';
+
+    $subscriptionUpdated =
+        isset($_GET['updated'])
+        && sanitize_key(
+            wp_unslash($_GET['updated'])
+        ) === '1';
+
+    ?>
+
+
+    <?php if ($subscriptionCreated): ?>
+
+        <div class="member-detail-success">
+            定期購読を登録しました。
+        </div>
+
+    <?php endif; ?>
+
+
+    <?php if ($subscriptionUpdated): ?>
+
+        <div class="member-detail-success">
+            定期購読を更新しました。
+        </div>
+
+    <?php endif; ?>
+
+
+
+
     <header class="dashboard-page__header">
 
         <div>
 
             <p class="dashboard-page__eyebrow">
-                SERIES MANAGEMENT
+                SUBSCRIPTION MANAGEMENT
             </p>
 
             <h1 class="dashboard-page__title">
-                シリーズ管理
+                定期購読管理
             </h1>
 
             <p class="dashboard-page__description">
-                書籍シリーズ・季刊誌・月刊誌を管理します。
+                季刊誌・月刊誌の定期購読販売条件を管理します。
             </p>
 
         </div>
 
+
+
+
         <div class="dashboard-page__actions">
 
             <a
-                href="<?php echo esc_url($productListUrl); ?>"
-                class="member-list-detail-link"
-            >
-                商品管理へ戻る
+                href="<?php echo esc_url($seriesListUrl); ?>"
+                class="member-list-detail-link">
+                シリーズ管理へ戻る
             </a>
 
             <a
                 href="<?php echo esc_url($createUrl); ?>"
-                class="member-detail-submit"
-            >
-                新規シリーズ登録
+                class="member-detail-submit">
+                新規定期購読登録
             </a>
 
         </div>
@@ -90,12 +133,12 @@ $productListUrl = add_query_arg(
 
     <div class="member-list">
 
-        <?php if (empty($seriesList)): ?>
+        <?php if (empty($subscriptionList)): ?>
 
             <div class="member-list-empty">
 
                 <p>
-                    登録されているシリーズはありません。
+                    登録されている定期購読はありません。
                 </p>
 
             </div>
@@ -110,10 +153,12 @@ $productListUrl = add_query_arg(
 
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">シリーズコード</th>
                             <th scope="col">シリーズ名</th>
                             <th scope="col">種別</th>
-                            <th scope="col">ISSN</th>
+                            <th scope="col">販売名</th>
+                            <th scope="col">購読価格</th>
+                            <th scope="col">購読期間</th>
+                            <th scope="col">発送回数</th>
                             <th scope="col">状態</th>
                             <th scope="col">操作</th>
                         </tr>
@@ -122,32 +167,42 @@ $productListUrl = add_query_arg(
 
                     <tbody>
 
-                        <?php foreach ($seriesList as $series): ?>
+                        <?php foreach (
+                            $subscriptionList as $subscription
+                        ): ?>
 
                             <?php
 
-                            $seriesId = (int) (
-                                $series['id'] ?? 0
-                            );
-
-                            $seriesCode = (string) (
-                                $series['series_code'] ?? ''
+                            $subscriptionId = (int) (
+                                $subscription['id'] ?? 0
                             );
 
                             $seriesName = (string) (
-                                $series['name'] ?? ''
+                                $subscription['series_name'] ?? ''
                             );
 
                             $seriesType = (string) (
-                                $series['series_type'] ?? ''
+                                $subscription['series_type'] ?? ''
                             );
 
-                            $issn = !empty($series['issn'])
-                                ? (string) $series['issn']
-                                : '-';
+                            $name = (string) (
+                                $subscription['name'] ?? ''
+                            );
+
+                            $price = (int) (
+                                $subscription['price'] ?? 0
+                            );
+
+                            $subscriptionMonths = (int) (
+                                $subscription['subscription_months'] ?? 0
+                            );
+
+                            $scheduledShipments = (int) (
+                                $subscription['scheduled_shipments'] ?? 0
+                            );
 
                             $status = (string) (
-                                $series['status'] ?? ''
+                                $subscription['status'] ?? ''
                             );
 
                             $seriesTypeLabel =
@@ -160,8 +215,8 @@ $productListUrl = add_query_arg(
 
                             $editUrl = add_query_arg(
                                 [
-                                    'view' => 'series-edit',
-                                    'id'   => $seriesId,
+                                    'view' => 'subscription-edit',
+                                    'id'   => $subscriptionId,
                                 ],
                                 home_url('/dashboard/')
                             );
@@ -172,13 +227,7 @@ $productListUrl = add_query_arg(
 
                                 <td>
                                     <?php echo esc_html(
-                                        (string) $seriesId
-                                    ); ?>
-                                </td>
-
-                                <td>
-                                    <?php echo esc_html(
-                                        $seriesCode
+                                        (string) $subscriptionId
                                     ); ?>
                                 </td>
 
@@ -198,17 +247,34 @@ $productListUrl = add_query_arg(
 
                                 <td>
                                     <?php echo esc_html(
-                                        $issn
+                                        $name
                                     ); ?>
+                                </td>
+
+                                <td>
+                                    <?php echo esc_html(
+                                        number_format($price)
+                                    ); ?>円
+                                </td>
+
+                                <td>
+                                    <?php echo esc_html(
+                                        (string) $subscriptionMonths
+                                    ); ?>か月
+                                </td>
+
+                                <td>
+                                    <?php echo esc_html(
+                                        (string) $scheduledShipments
+                                    ); ?>回
                                 </td>
 
                                 <td>
 
                                     <span
                                         class="member-status member-status--<?php
-                                        echo esc_attr($status);
-                                        ?>"
-                                    >
+                                                                            echo esc_attr($status);
+                                                                            ?>">
                                         <?php echo esc_html(
                                             $statusLabel
                                         ); ?>
@@ -220,10 +286,9 @@ $productListUrl = add_query_arg(
 
                                     <a
                                         href="<?php echo esc_url(
-                                            $editUrl
-                                        ); ?>"
-                                        class="member-list-detail-link"
-                                    >
+                                                    $editUrl
+                                                ); ?>"
+                                        class="member-list-detail-link">
                                         編集
                                     </a>
 

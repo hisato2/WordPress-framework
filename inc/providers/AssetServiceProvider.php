@@ -326,7 +326,7 @@ final class AssetServiceProvider
         }
 
 
-        // Dashboard - Product Form
+          // Dashboard
         if (is_page('dashboard')) {
 
             $view = isset($_GET['view'])
@@ -334,6 +334,13 @@ final class AssetServiceProvider
                     wp_unslash($_GET['view'])
                 )
                 : '';
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product Form
+            |--------------------------------------------------------------------------
+            */
 
             if (
                 in_array(
@@ -352,8 +359,34 @@ final class AssetServiceProvider
                     true
                 );
             }
-                
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Series Form
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                in_array(
+                    $view,
+                    [
+                        'series-create',
+                        'series-edit',
+                    ],
+                    true
+                )
+            ) {
+                self::enqueueScript(
+                    'hks-series-form',
+                    'js/series/series-form.js',
+                    ['hks-common'],
+                    true
+                );
+            }
+
         }
+        
 
     }
 

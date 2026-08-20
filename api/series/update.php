@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     );
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | Nonce Check
@@ -38,13 +37,31 @@ if (
     $nonce === ''
     || !wp_verify_nonce(
         $nonce,
-        'hks_create_series'
+        'hks_update_series'
     )
 ) {
     wp_die(
         'セキュリティ確認に失敗しました。',
         '認証エラー',
         ['response' => 403]
+    );
+}
+
+/*
+|--------------------------------------------------------------------------
+| Series ID
+|--------------------------------------------------------------------------
+*/
+
+$seriesId = isset($_POST['series_id'])
+    ? absint($_POST['series_id'])
+    : 0;
+
+if ($seriesId <= 0) {
+    wp_die(
+        'シリーズIDが正しくありません。',
+        '入力エラー',
+        ['response' => 400]
     );
 }
 
@@ -95,11 +112,9 @@ $seriesData = [
 ];
 
 
-
-
 /*
 |--------------------------------------------------------------------------
-| Create Series
+| Update Series
 |--------------------------------------------------------------------------
 */
 
@@ -108,12 +123,10 @@ try {
     $productSeriesService =
         new ProductSeriesService();
 
-    $seriesId =
-        $productSeriesService->create(
-            $seriesData
-        );
-
-
+    $productSeriesService->update(
+        $seriesId,
+        $seriesData
+    );
 
     /*
     |--------------------------------------------------------------------------
@@ -124,7 +137,7 @@ try {
     $redirectUrl = add_query_arg(
         [
             'view'    => 'series',
-            'created' => '1',
+            'updated' => '1',
         ],
         home_url('/dashboard/')
     );
@@ -132,12 +145,11 @@ try {
     wp_safe_redirect($redirectUrl);
 
     exit;
-
 } catch (\Throwable $e) {
 
     wp_die(
         esc_html($e->getMessage()),
-        'シリーズ登録エラー',
+        'シリーズ更新エラー',
         ['response' => 400]
     );
 }

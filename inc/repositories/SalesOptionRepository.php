@@ -178,6 +178,59 @@ final class SalesOptionRepository
 
 
 
+
+
+/**
+ * 定期購読販売条件の一覧を取得
+ *
+ * シリーズ情報を結合して、
+ * 定期購読管理一覧で使用する。
+ *
+ * @return array<int, array<string, mixed>>
+ */
+    public function findAllSubscriptions(): array
+    {
+        $sql = "
+            SELECT
+                so.*,
+                ps.series_code,
+                ps.series_type,
+                ps.name AS series_name
+            FROM {$this->table} AS so
+            INNER JOIN hks_product_series AS ps
+                ON ps.id = so.series_id
+            WHERE so.sales_type = 'subscription'
+            AND ps.series_type IN (
+                'quarterly',
+                'monthly'
+            )
+            ORDER BY
+                ps.name ASC,
+                so.id ASC
+        ";
+
+        return $this->wpdb->get_results(
+            $sql,
+            ARRAY_A
+        ) ?: [];
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 販売条件登録
      *

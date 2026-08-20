@@ -152,7 +152,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 定期購読新規登録
+    |--------------------------------------------------------------------------
+    */
 
+    if ($dashboardAction === 'hks_create_subscription') {
+
+        $createSubscriptionFile = get_template_directory()
+            . '/api/subscriptions/create.php';
+
+        if (!is_file($createSubscriptionFile)) {
+            wp_die(
+                '定期購読登録処理が見つかりません。',
+                'システムエラー',
+                ['response' => 500]
+            );
+        }
+
+        require $createSubscriptionFile;
+
+        exit;
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| 定期購読更新
+|--------------------------------------------------------------------------
+*/
+
+if ($dashboardAction === 'hks_update_subscription') {
+
+    $updateSubscriptionFile = get_template_directory()
+        . '/api/subscriptions/update.php';
+
+    if (!is_file($updateSubscriptionFile)) {
+        wp_die(
+            '定期購読更新処理が見つかりません。',
+            'システムエラー',
+            ['response' => 500]
+        );
+    }
+
+    require $updateSubscriptionFile;
+
+    exit;
+}
+
+    
+
+        /*
+    |--------------------------------------------------------------------------
+    | シリーズ更新
+    |--------------------------------------------------------------------------
+    */
+
+    if ($dashboardAction === 'hks_update_series') {
+
+        $updateSeriesFile = get_template_directory()
+            . '/api/series/update.php';
+
+        if (!is_file($updateSeriesFile)) {
+            wp_die(
+                'シリーズ更新処理が見つかりません。',
+                'システムエラー',
+                ['response' => 500]
+            );
+        }
+
+        require $updateSeriesFile;
+
+        exit;
+    }
 
 
     /*
@@ -325,7 +398,25 @@ switch ($view) {
                 $productId
             );
 
+   /*
+        |--------------------------------------------------------------------------
+        | 商品シリーズ一覧取得
+        |--------------------------------------------------------------------------
+        |
+        | 商品編集画面の「所属シリーズ」選択で使用する。
+        |
+        | 商品種別に応じた絞り込みは
+        | product-form.js 側で行う。
+        |
+        */
 
+        $productSeriesRepository =
+            new \HKS\Repositories\ProductSeriesRepository();
+
+        $seriesList =
+            $productSeriesRepository->all();
+
+            
         /*
         |--------------------------------------------------------------------------
         | 単品販売条件取得
@@ -452,21 +543,6 @@ case 'series-edit':
 
     /*
     |--------------------------------------------------------------------------
-    | 定期購読販売条件取得
-    |--------------------------------------------------------------------------
-    */
-
-    $salesOptionRepository =
-        new \HKS\Repositories\SalesOptionRepository();
-
-    $subscription =
-        $salesOptionRepository->findSubscriptionBySeriesId(
-            $seriesId
-        );
-
-
-    /*
-    |--------------------------------------------------------------------------
     | View
     |--------------------------------------------------------------------------
     */
@@ -476,6 +552,168 @@ case 'series-edit':
 
     break;
     
+
+    /*
+    |--------------------------------------------------------------------------
+    | 定期購読管理
+    |--------------------------------------------------------------------------
+    */
+
+    case 'subscriptions':
+
+        $salesOptionService =
+            new \HKS\Products\SalesOptionService();
+
+        $subscriptionList =
+            $salesOptionService->getSubscriptions();
+
+        $contentView = get_template_directory()
+            . '/views/dashboard/subscriptions/index.php';
+
+        break;
+
+
+
+
+
+            /*
+    |--------------------------------------------------------------------------
+    | 定期購読 新規登録
+    |--------------------------------------------------------------------------
+    */
+
+    case 'subscription-create':
+
+        /*
+        |--------------------------------------------------------------------------
+        | 定期購読対象刊行物
+        |--------------------------------------------------------------------------
+        */
+
+        $productSeriesRepository =
+            new \HKS\Repositories\ProductSeriesRepository();
+
+        $publicationList =
+            $productSeriesRepository
+                ->findAvailableForSubscription();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | View
+        |--------------------------------------------------------------------------
+        */
+
+        $contentView = get_template_directory()
+            . '/views/dashboard/subscriptions/create.php';
+
+        break;
+
+
+
+/*
+|--------------------------------------------------------------------------
+| 定期購読 編集
+|--------------------------------------------------------------------------
+*/
+
+case 'subscription-edit':
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subscription ID
+    |--------------------------------------------------------------------------
+    */
+
+    $subscriptionId = isset($_GET['id'])
+        ? absint($_GET['id'])
+        : 0;
+
+    if ($subscriptionId <= 0) {
+        wp_die(
+            '定期購読IDが正しくありません。',
+            '入力エラー',
+            ['response' => 400]
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 定期購読取得
+    |--------------------------------------------------------------------------
+    */
+
+    $salesOptionRepository =
+        new \HKS\Repositories\SalesOptionRepository();
+
+    $subscription =
+        $salesOptionRepository->findById(
+            $subscriptionId
+        );
+
+    if ($subscription === null) {
+        wp_die(
+            '定期購読情報が見つかりません。',
+            'データエラー',
+            ['response' => 404]
+        );
+    }
+
+    if (
+        ($subscription['sales_type'] ?? '')
+        !== 'subscription'
+    ) {
+        wp_die(
+            '指定された販売条件は定期購読ではありません。',
+            'データエラー',
+            ['response' => 400]
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 対象刊行物取得
+    |--------------------------------------------------------------------------
+    */
+
+    $seriesId = (int) (
+        $subscription['series_id'] ?? 0
+    );
+
+    $productSeriesRepository =
+        new \HKS\Repositories\ProductSeriesRepository();
+
+    $publication =
+        $productSeriesRepository->findById(
+            $seriesId
+        );
+
+    if ($publication === null) {
+        wp_die(
+            '対象刊行物が見つかりません。',
+            'データエラー',
+            ['response' => 404]
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | View
+    |--------------------------------------------------------------------------
+    */
+
+    $contentView = get_template_directory()
+        . '/views/dashboard/subscriptions/edit.php';
+
+    break;
+
+
+
+
+
 
 
 

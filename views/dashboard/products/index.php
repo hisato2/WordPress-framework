@@ -13,8 +13,9 @@ defined('ABSPATH') || exit;
 
 $productTypeLabels = [
     'book'     => '単行本',
-    'volume'   => 'シリーズ巻',
-    'issue'    => '雑誌・刊行物',
+    'volume'   => 'シリーズ本',
+    'quarterly' => '季刊誌',
+    'monthly'   => '月刊誌',
     'software' => 'ソフトウェア',
 ];
 

@@ -21,12 +21,12 @@ $listUrl = home_url('/dashboard/?view=products');
 */
 
 $productTypes = [
-    'book'     => '単行本',
-    'volume'   => 'シリーズ巻',
-    'issue'    => '雑誌・刊行物',
-    'software' => 'ソフトウェア',
+    'book'      => '単行本',
+    'volume'    => 'シリーズ本',
+    'quarterly' => '季刊誌',
+    'monthly'   => '月刊誌',
+    'software'  => 'ソフトウェア',
 ];
-
 
 /*
 |--------------------------------------------------------------------------
@@ -229,6 +229,16 @@ $statuses = [
                                             (string) $seriesId
                                         ); ?>"
                                     >
+
+                                    <option
+                                        value="<?php echo esc_attr(
+                                            (string) $seriesId
+                                        ); ?>"
+                                        data-series-type="<?php echo esc_attr(
+                                            (string) ($series['series_type'] ?? '')
+                                        ); ?>"
+                                    >
+
                                         <?php echo esc_html(
                                             $seriesName
                                             . (
@@ -568,6 +578,63 @@ $statuses = [
                                 name="publication_date"
                                 class="member-detail__control"
                             >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                ソフトウェア情報
+                ================================================= -->
+
+            <section
+                id="software_section"
+                class="member-detail__section"
+                style="display: none;"
+            >
+
+                <header class="member-detail__section-header">
+
+                    <h2 class="member-detail__section-title">
+                        ソフトウェア情報
+                    </h2>
+
+                </header>
+
+
+                <div class="member-detail__section-body">
+
+                    <div class="member-detail__grid">
+
+
+                        <!-- ソフトウェアバージョン -->
+
+                        <div class="member-detail__item">
+
+                            <label
+                                for="software_version"
+                                class="member-detail__label"
+                            >
+                                ソフトウェアバージョン
+                            </label>
+
+                            <input
+                                type="text"
+                                id="software_version"
+                                name="software_version"
+                                class="member-detail__control"
+                                maxlength="50"
+                                placeholder="例: 1.0.1"
+                            >
+
+                            <p class="member-detail__help">
+                                バージョン番号を入力してください。
+                            </p>
 
                         </div>
 

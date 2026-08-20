@@ -66,6 +66,21 @@ $isSeriesActive = in_array(
 );
 
 
+/*
+|--------------------------------------------------------------------------
+| 定期購読管理 Active判定
+|--------------------------------------------------------------------------
+*/
+
+$isSubscriptionsActive = in_array(
+    $currentView,
+    [
+        'subscriptions',
+        'subscription-create',
+        'subscription-edit',
+    ],
+    true
+);
 
 
 
@@ -149,6 +164,31 @@ $isSeriesActive = in_array(
                 </li>
 
 
+
+
+                <li class="dashboard-nav__item">
+
+                    <a
+                        class="dashboard-nav__link<?= $isSubscriptionsActive ? ' is-active' : ''; ?>"
+                        href="<?= esc_url(
+                            home_url('/dashboard/?view=subscriptions')
+                        ); ?>"
+                    >
+                        <span
+                            class="dashboard-nav__icon"
+                            aria-hidden="true"
+                        >
+                            ◫
+                        </span>
+
+                        <span>
+                            定期購読管理
+                        </span>
+                    </a>
+
+                </li>
+
+
                 <li class="dashboard-nav__item">
 
                     <a
@@ -171,7 +211,7 @@ $isSeriesActive = in_array(
 
                 </li>
 
-
+                                
 
                 <li class="dashboard-nav__item">
 

@@ -1187,3 +1187,17 @@ select.member-detail__control {
     color: #999995;
     font-size: 13px;
 }
+
+/* ==========================================================================
+   Dashboard Success Message
+   ========================================================================== */
+
+.member-detail-success {
+    color: var(--primary);
+    background: #F0F6FB;
+    border-left: 4px solid var(--primary);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+    font-weight: 600;
+}
